@@ -1,0 +1,74 @@
+-- Create restaurants table
+CREATE TABLE restaurants (
+    id INTEGER PRIMARY KEY,
+    name TEXT NOT NULL,
+    location TEXT,
+    rating REAL
+);
+
+-- Create menu_items table
+CREATE TABLE menu_items (
+    id INTEGER PRIMARY KEY,
+    restaurant_id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    price REAL,
+    description TEXT,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants (id)
+);
+
+-- Create orders table
+CREATE TABLE orders (
+    id INTEGER PRIMARY KEY,
+    customer_name TEXT NOT NULL,
+    restaurant_id INTEGER NOT NULL,
+    item_id INTEGER NOT NULL,
+    quantity INTEGER,
+    order_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (restaurant_id) REFERENCES restaurants (id),
+    FOREIGN KEY (item_id) REFERENCES menu_items (id)
+);
+
+-- Insert data into restaurants table
+INSERT INTO restaurants (name, location, rating) VALUES
+    ('Tasty Burger Joint', '123 Main St', 4.2),
+    ('Pizza Paradise', '456 Elm St', 4.5),
+    ('Sushi Spot', '789 Oak St', 4.7);
+
+-- Insert data into menu_items table
+INSERT INTO menu_items (restaurant_id, name, price, description) VALUES
+    (1, 'Classic Burger', 8.99, 'Juicy beef patty with lettuce and tomato'),
+    (1, 'Cheeseburger', 9.99, 'Classic burger with cheese'),
+    (2, 'Margherita Pizza', 10.99, 'Tomato sauce, mozzarella, basil'),
+    (2, 'Pepperoni Pizza', 12.99, 'Tomato sauce, mozzarella, pepperoni'),
+    (3, 'California Roll', 11.99, 'Crab, avocado, cucumber wrapped in seaweed');
+
+-- Insert data into orders table
+INSERT INTO orders (customer_name, restaurant_id, item_id, quantity) VALUES
+    ('Alice', 1, 1, 2),
+    ('Bob', 2, 4, 1),
+    ('Charlie', 3, 5, 3),
+    ('Alice', 2, 3, 1);
+
+--Alter Table: Add a column phone_number to the restaurants table.
+ALTER TABLE restaurants ADD COLUMN phone_number TEXT;
+
+--Drop Table: Drop the menu_items table.
+DROP TABLE menu_items;
+
+--DML Commands
+--Select: Retrieve all restaurants with their ratings.
+
+SELECT name, rating FROM restaurants;
+
+--Update: Update the rating of 'Pizza Paradise' to 4.8.
+UPDATE restaurants SET rating = 4.8 WHERE name = 'Pizza Paradise';
+
+--Delete: Remove orders placed by 'Alice'.
+DELETE FROM orders WHERE customer_name = 'Alice';
+-- Example query: Select all orders
+SELECT * FROM orders;
+
+-- Example query: Select restaurants with ratings >= 4.5
+SELECT * FROM restaurants WHERE rating >= 4.5;
+
+
