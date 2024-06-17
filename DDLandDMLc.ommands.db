@@ -71,4 +71,61 @@ SELECT * FROM orders;
 -- Example query: Select restaurants with ratings >= 4.5
 SELECT * FROM restaurants WHERE rating >= 4.5;
 
+SELECT 
+    orders.id, 
+    orders.customer_name, 
+    menu_items.name AS item_name, 
+    orders.quantity, 
+    menu_items.price, 
+    (orders.quantity * menu_items.price) AS total_price
+FROM 
+    orders
+JOIN 
+    menu_items ON orders.item_id = menu_items.id;
+
+SELECT 
+    id, 
+    name, 
+    price, 
+    (price * 0.90) AS discounted_price
+FROM 
+    menu_items;
+SELECT 
+    * 
+FROM 
+    restaurants 
+WHERE 
+    rating >= 4.5 AND location = '456 Elm St';
+SELECT 
+    * 
+FROM 
+    orders 
+WHERE 
+    quantity > 1 OR customer_name = 'Alice';
+ALTER TABLE restaurants ADD COLUMN flags INTEGER DEFAULT 0;
+
+UPDATE restaurants SET flags = 1 WHERE id = 1;  -- Tasty Burger Joint: has_delivery
+UPDATE restaurants SET flags = 3 WHERE id = 2;  -- Pizza Paradise: has_delivery and has_vegan_options (1 | 2 = 3)
+UPDATE restaurants SET flags = 4 WHERE id = 3;  -- Sushi Spot: open_24_hours
+
+SELECT 
+    * 
+FROM 
+    restaurants 
+WHERE 
+    (flags & 1) = 1;
+SELECT 
+    * 
+FROM 
+    restaurants 
+WHERE 
+    (flags & 3) = 3;
+
+UPDATE 
+    restaurants 
+SET 
+    flags = flags ^ 2 
+WHERE 
+    id = 1;
+
 
