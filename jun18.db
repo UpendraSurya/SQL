@@ -1,0 +1,88 @@
+-- Create a new database (if not exists)
+CREATE DATABASE IF NOT EXISTS my_database;
+-- Switch to the new database
+USE my_database;
+
+-- Create a table named 'employees'
+CREATE TABLE employees (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL
+);
+
+-- Create a table for departments
+CREATE TABLE departments (
+    dept_id INT AUTO_INCREMENT PRIMARY KEY,
+    dept_name VARCHAR(100) NOT NULL
+);
+
+-- Insert sample data into the 'employees' table
+INSERT INTO employees (name, department, salary) VALUES
+('John Doe', 'HR', 50000),
+('Jane Smith', 'IT', 60000),
+('Michael Johnson', 'Finance', 70000),
+('Emily Davis', 'HR', 55000);
+
+-- Insert sample data into the 'departments' table
+INSERT INTO departments (dept_name) VALUES
+('HR'),
+('IT'),
+('Finance');
+
+SELECT * FROM employees;
+
+SELECT name, department FROM employees;
+
+SELECT * FROM employees WHERE department = 'HR';
+-- Calculate average salary
+SELECT AVG(salary) AS average_salary FROM employees;
+
+-- Retrieve employee names with department names using INNER JOIN
+SELECT e.name AS employee_name, d.dept_name
+FROM employees e
+INNER JOIN departments d ON e.department = d.dept_name;
+
+-- Find employees with the highest salary
+SELECT *
+FROM employees
+WHERE salary = (SELECT MAX(salary) FROM employees);
+
+-- Concatenate employee name and department
+SELECT CONCAT(name, ' works in ', department) AS emp_info FROM employees;
+
+-- Calculate the square root of salary
+SELECT name, salary, SQRT(salary) AS sqrt_salary FROM employees;
+
+-- Count employees in each department
+SELECT department, COUNT(*) AS num_employees
+FROM employees
+GROUP BY department;
+
+-- Calculate total salary for each department
+SELECT department, SUM(salary) AS total_salary
+FROM employees
+GROUP BY department;
+
+-- Classify employees based on salary
+SELECT name, salary,
+    CASE
+        WHEN salary > 60000 THEN 'High Salary'
+        WHEN salary > 50000 THEN 'Medium Salary'
+        ELSE 'Low Salary'
+    END AS salary_classification
+FROM employees;
+
+-- Get current timestamp
+SELECT NOW() AS current_timestamp;
+
+-- Replace NULL department names with 'Unknown'
+SELECT name, COALESCE(department, 'Unknown') AS department
+FROM employees;
+
+-- Combine results from employees and departments
+SELECT name AS emp_name, 'employee' AS type
+FROM employees
+UNION
+SELECT dept_name AS emp_name, 'department' AS type
+FROM departments;
