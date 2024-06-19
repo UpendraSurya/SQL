@@ -1,0 +1,60 @@
+-- Create a sample table to demonstrate normalization levels
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    total_amount DECIMAL(10, 2)
+);
+
+-- Insert sample data into Orders table
+INSERT INTO Orders (order_id, customer_id, order_date, total_amount)
+VALUES (1, 101, '2024-06-19', 150.00),
+       (2, 102, '2024-06-18', 200.50);
+
+-- 1NF (First Normal Form): Ensuring atomicity
+-- In 1NF, each column should contain only atomic (indivisible) values
+-- Here, the Orders table is already in 1NF because each column contains atomic values
+
+-- 2NF (Second Normal Form): Removing partial dependencies
+-- In 2NF, the table should be in 1NF, and all non-key attributes should be fully functionally dependent on the primary key
+-- Assume we have a Customers table with customer information
+CREATE TABLE Customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    customer_address VARCHAR(255)
+);
+
+-- Alter Orders table to include customer_id as foreign key
+ALTER TABLE Orders
+ADD CONSTRAINT fk_customer_id
+FOREIGN KEY (customer_id)
+REFERENCES Customers(customer_id);
+
+-- The Orders table is now in 2NF because all non-key attributes (order_date, total_amount) depend on the entire primary key (order_id, customer_id)
+
+-- 3NF (Third Normal Form): Removing transitive dependencies
+-- In 3NF, the table should be in 2NF, and there should be no transitive dependencies (attributes that are dependent on non-key attributes)
+-- Assume we have a Products table with product information
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    unit_price DECIMAL(10, 2)
+);
+
+-- Assume we want to track products ordered in the Orders table
+CREATE TABLE Order_Items (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, product_id),
+    FOREIGN KEY (order_id) REFERENCES Orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES Products(product_id)
+);
+
+-- The Orders table is now in 3NF because all attributes (order_id, customer_id, order_date, total_amount) are directly dependent on the primary key (order_id)
+
+-- Clean up: Drop sample tables created for demonstration
+DROP TABLE Orders;
+DROP TABLE Customers;
+DROP TABLE Products;
+DROP TABLE Order_Items;
