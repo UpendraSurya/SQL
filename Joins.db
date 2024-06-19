@@ -1,0 +1,52 @@
+-- Creating sample tables TableA and TableB
+CREATE TABLE TableA (
+    ID INT PRIMARY KEY,
+    Name VARCHAR(50)
+);
+
+CREATE TABLE TableB (
+    ID INT PRIMARY KEY,
+    TableA_ID INT,
+    Description VARCHAR(100)
+);
+
+-- Inserting sample data into TableA
+INSERT INTO TableA (ID, Name) VALUES (1, 'John');
+INSERT INTO TableA (ID, Name) VALUES (2, 'Jane');
+INSERT INTO TableA (ID, Name) VALUES (3, 'Alice');
+
+-- Inserting sample data into TableB
+INSERT INTO TableB (ID, TableA_ID, Description) VALUES (101, 1, 'Description for John');
+INSERT INTO TableB (ID, TableA_ID, Description) VALUES (102, 2, 'Description for Jane');
+INSERT INTO TableB (ID, TableA_ID, Description) VALUES (103, NULL, 'Description without TableA reference');
+
+-- SQL query demonstrating different types of joins
+
+-- INNER JOIN: Returns rows when there is a match in both tables
+SELECT *
+FROM TableA
+INNER JOIN TableB ON TableA.ID = TableB.TableA_ID;
+
+-- LEFT JOIN: Returns all rows from the left table (TableA), and the matched rows from the right table (TableB)
+SELECT *
+FROM TableA
+LEFT JOIN TableB ON TableA.ID = TableB.TableA_ID;
+
+-- RIGHT JOIN: Returns all rows from the right table (TableB), and the matched rows from the left table (TableA)
+SELECT *
+FROM TableA
+RIGHT JOIN TableB ON TableA.ID = TableB.TableA_ID;
+
+-- FULL OUTER JOIN: Returns all rows when there is a match in either left (TableA) or right (TableB) table
+SELECT *
+FROM TableA
+FULL OUTER JOIN TableB ON TableA.ID = TableB.TableA_ID;
+
+-- CROSS JOIN: Returns the Cartesian product of the two tables (all possible combinations of rows)
+SELECT *
+FROM TableA
+CROSS JOIN TableB;
+
+-- Dropping sample tables (clean up)
+DROP TABLE TableA;
+DROP TABLE TableB;
